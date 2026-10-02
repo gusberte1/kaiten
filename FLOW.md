@@ -47,21 +47,21 @@ proveedor: gemini     # opcional: preferido para implementar
 timeout: 60           # opcional, minutos
 sin-merge: si         # opcional: no mergear solo
 ```
-Se toma un ticket **no terminado, asignado a un bot** (`bot_usernames` en la sección `tracker` de `flow_config.json`) que tenga
+Se toma un ticket **no terminado, asignado a un bot** (`bot_usernames` en la sección `tracker` de `flow/flow_config.json`) que tenga
 `agente: listo`. Los demás se ignoran (los tickets viejos VIK-POC no se tocan).
 Borrar un ticket en Vikunja no cancela lo ya tomado: usá `flow.py decide TAREA reject`.
 
 ## Criterios de diseño: motor, adaptadores y proyecto
 
 - **Tracker intercambiable.** El flujo no habla con Vikunja sino con la interfaz `Tracker` (`tracker.py`: `tasks`, `comments`, `comment`, `link`, `close`, `columns`, `setup_columns`, `move`, más `humans`/`bots`).
-  Vikunja es una implementación (`VikunjaTracker` en `vikunja_adapter.py`); se elige con `"tracker": {"kind": ...}` en `flow_config.json`.
+  Vikunja es una implementación (`VikunjaTracker` en `vikunja_adapter.py`); se elige con `"tracker": {"kind": ...}` en `flow/flow_config.json`.
   Objetivo: poder adaptarlo a otros gestores de tickets (Jira, Trello, etc.) escribiendo un adaptador nuevo y registrándolo en `tracker.KINDS`, sin tocar `flow.py`.
   Por ahora solo existe Vikunja, pero el flujo corre independiente del tracker (sin `tracker` opera con tareas locales).
 - **Lógica del proyecto separada del motor.** Todo lo que es del proyecto vive en `flow-project.json` (raíz del repo): ramas, guardas (`protected_paths`, prefijos de test permitidos), `hooks_dir`, email de git, mapa de componentes, comando de notificación.
-  `orchestration_policy.json` conserva solo la política del motor (riesgos, cuotas, límites). Mismo host, código separado: el motor puede mejorar en un proyecto y llevarse a otro copiando el motor y escribiendo su propio `flow-project.json`.
+  `flow/orchestration_policy.json` conserva solo la política del motor (riesgos, cuotas, límites). Mismo host, código separado: el motor puede mejorar en un proyecto y llevarse a otro copiando el motor y escribiendo su propio `flow-project.json`.
 
 ## Proveedores
-`providers.json`: una entrada por proveedor (argv de implementar y de revisar). Claude, Codex y Gemini
+`flow/providers.json`: una entrada por proveedor (argv de implementar y de revisar). Claude, Codex y Gemini
 habilitados; DeepSeek (aider) deshabilitado hasta instalar el harness. Sumar otro = copiar una entrada.
 Cuota agotada → cooldown de 5 h y se usa otro. Si no hay revisor independiente disponible la tarea
 **espera**: nunca se autorrevisa.
@@ -90,16 +90,16 @@ Razón > 1.15 se agota antes del reinicio; < 0.6 se pierde cuota. La semanal man
 Veredicto por grupo: `AGOTADA` (≤ 3 % libre: bloqueo duro), `FRENAR` (semanal se agota), `ESPERAR` (5 h al límite),
 `MANTENER`, `USAR` (sobra cuota), `SIN_DATO` (lectura más vieja que 1 h; Codex 24 h, porque sólo se actualiza cuando corre).
 
-En el flujo: cada proveedor declara en `providers.json` qué grupos lo alimentan (`"quota": [...]`; DeepSeek no tiene
+En el flujo: cada proveedor declara en `flow/providers.json` qué grupos lo alimentan (`"quota": [...]`; DeepSeek no tiene
 ventana y queda `SIN_DATO`). `Providers.usable` descarta al `AGOTADA` con la hora real de reinicio, y `Team.pick`
 suma al puntaje de confianza `+0.15 USAR / -0.15 ESPERAR / -0.30 FRENAR` (doble en riesgo `high`). Sin archivo de cuota
 o con error, el flujo se comporta como antes. Cada corrida guarda el veredicto usado en su `meta.quota`.
 Ver: `python3 agents/flow.py quota`, `python3 agents/quota.py show` o `http://100.75.61.75:8099/cuotas`.
 
 ## Límites (autonomía plena, límites por política — no por sandbox)
-- `orchestration_policy.json` → `flow`: riesgos, revisiones, rondas, timeouts, límite diario de ejecuciones,
+- `flow/orchestration_policy.json` → `flow`: riesgos, revisiones, rondas, timeouts, límite diario de ejecuciones,
   paths protegidos, patrones de secretos, prefijos de test permitidos, tamaño máximo del diff.
-- **Hooks**: ejecutables en `agents/hooks/{pre_run,post_run,pre_merge}.d/`. Reciben JSON por stdin;
+- **Hooks**: ejecutables en `flow/hooks/{pre_run,post_run,pre_merge}.d/`. Reciben JSON por stdin;
   exit 0 = seguir, 2 = escalar a persona, otro = bloquear/esperar (ej.: ventana de congelamiento, "no
   mergear con la cámara en uso").
 - Por tarea: `alcance`, `acciones`, `timeout`, `sin-merge`, `proveedor`.
@@ -163,7 +163,7 @@ Todo se deriva del estado del orquestador (sin segunda fuente de verdad):
 
 ## Ejecución autónoma de proveedores
 La ejecuta el servicio `sushi-agent-flow` (systemd), no una sesión de Claude: no requiere permisos
-interactivos. `providers.json` define cómo se lanza cada CLI sin confirmaciones (Claude `acceptEdits`, Codex
+interactivos. `flow/providers.json` define cómo se lanza cada CLI sin confirmaciones (Claude `acceptEdits`, Codex
 `workspace-write`, Gemini `yolo`, DeepSeek `dsh --profile headless` con la key sólo en el entorno del proceso).
 Los revisores van en modo solo lectura cuando el CLI lo permite y, en todos los casos, el controlador verifica
 que no hayan tocado nada. `probar_proveedores.sh` comprueba los flags reales de cada uno.

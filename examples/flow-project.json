@@ -5,13 +5,13 @@
     "main": "main",
     "integration": "dev"
   },
-  "hooks_dir": "agents/hooks",
+  "hooks_dir": "flow/hooks",
   "guards": {
     "protected_paths": [
-      "agents/orchestration_*.json",
+      "flow/orchestration_*.json",
       "agents/orchestrator.py",
       "agents/flow.py",
-      "agents/providers.json",
+      "flow/providers.json",
       "system-setup/*.sh",
       "system-setup/deepseek-harness/**",
       "scripts/loop.sh",
@@ -24,7 +24,7 @@
       "**/secrets*",
       ".github/**",
       "AGENTS.md",
-      "agents/team.json",
+      "flow/team.json",
       "agents/jev.py",
       "agents/learn.py",
       "agents/team.py",

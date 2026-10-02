@@ -3,3 +3,4 @@ __pycache__/
 *.env
 queue.json
 queue.json.lock
+current_agent

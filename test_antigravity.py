@@ -90,7 +90,7 @@ class AntigravityTest(unittest.TestCase):
         self.assertEqual(got.stderr.strip(), "progreso")
 
     def test_default_configuration_is_an_enabled_normal_cli_provider(self):
-        cfg = json.loads((Path(providers.__file__).with_name("providers.json")).read_text())
+        cfg = json.loads(providers.DEFAULT_FILE.read_text())
         anti = cfg["providers"]["antigravity"]
         self.assertTrue(anti["enabled"])   # habilitado por decisión de Gustavo; sin sesión lo excluye el auth_check
         self.assertEqual(anti["binary"], "agy")

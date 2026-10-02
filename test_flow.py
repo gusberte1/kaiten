@@ -50,7 +50,7 @@ class FlowTest(unittest.TestCase):
             "Alfa": {"title": "Impl", "roles": ["implementer", "evaluator", "researcher"], "providers": ["alpha"], "specialties": "code", "initial_trust": 2, "ceiling": 3, "persona": "Sos Alfa."},
             "Beto": {"title": "Rev", "roles": ["reviewer"], "providers": ["beta"], "specialties": "review", "initial_trust": 2, "ceiling": 3, "persona": "Sos Beto."}}}
         (root / "team.json").write_text(json.dumps(team))
-        policy = json.loads((flow.HERE / "orchestration_policy.json").read_text())
+        policy = json.loads((flow.paths.CONFIG / "orchestration_policy.json").read_text())
         policy["flow"].update(provider_order_implement=["alpha", "beta"], provider_order_review=["beta", "alpha"], audit_first_n_per_provider=1, audit_sample_rate=0)
         (root / "policy.json").write_text(json.dumps(policy))
         self.git("init", "-q", "-b", "main")
@@ -524,7 +524,7 @@ class FlowTest(unittest.TestCase):
         fake = self.fake / "limit"
         fake.write_text('#!/bin/bash\necho "You\'ve hit your session limit · resets 12:40pm (America/Argentina/Buenos_Aires)"\n'); fake.chmod(0o755)
         cfg = json.loads((self.fake.parent / "providers.json").read_text())
-        cfg["blocked_regex"] = json.loads((flow.HERE / "providers.json").read_text())["blocked_regex"]
+        cfg["blocked_regex"] = json.loads((flow.paths.CONFIG / "providers.json").read_text())["blocked_regex"]
         cfg["providers"]["alpha"]["binary"] = str(fake)
         (self.fake.parent / "providers.json").write_text(json.dumps(cfg))
         self.flow.provs = flow.prov.Providers(self.fake.parent / "providers.json", self.flow.rt / "provider-health.json")
@@ -603,7 +603,7 @@ class FlowTest(unittest.TestCase):
         self.assertEqual((g["alcance"], g["alcance-extra"], g["test"]), ("agents/**", "datos/**", "python3 -m unittest discover -s agents -p test_*.py"))
         real = flow.parse_contract("agente: listo tipo: research riesgo: medium componente: system-setup alcance: agents/\\** proveedor: Sashimi\n\n## Objetivo\n\nEvaluar algo.")
         self.assertEqual((real["agente"], real["tipo"], real["componente"], real["alcance"], real["proveedor"]), ("listo", "research", "system-setup", "agents/**", "Sashimi"))
-        hooks = self.repo / "agents/hooks/pre_run.d"
+        hooks = self.repo / "flow/hooks/pre_run.d"
         hooks.mkdir(parents=True)
         (hooks / "10-no.sh").write_text("#!/bin/bash\necho 'ventana de congelamiento'; exit 2\n")
         (hooks / "10-no.sh").chmod(0o755)

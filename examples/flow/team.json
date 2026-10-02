@@ -2,7 +2,7 @@
   "version": 1,
   "_doc": "El equipo: cada agente tiene nombre, roles, proveedores en orden de preferencia (con fallback), especialidad y nivel de confianza inicial. La confianza sube con tareas limpias y baja con auditorías malas (learn.py). El nivel decide el riesgo máximo que puede tomar. Revisor y autor de una tarea nunca comparten proveedor.",
   "levels": {"0": "sólo bajo supervisión total", "1": "low", "2": "medium", "3": "high"},
-  "min_level_for_risk": {"low": 0, "medium": 0, "high": 3},
+  "min_level_for_risk": {"low": 1, "medium": 2, "high": 3},
   "promote_every": 5,
   "agents": {
     "Itamae": {

@@ -24,10 +24,10 @@ from tempfile import NamedTemporaryFile
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-from paths import RUNTIME
+from paths import CONFIG, RUNTIME
 DEFAULT_STATE = RUNTIME / "agent-orchestration.json"
-ROLES_FILE = HERE / "orchestration_roles.json"
-POLICY_FILE = HERE / "orchestration_policy.json"
+ROLES_FILE = CONFIG / "orchestration_roles.json"
+POLICY_FILE = CONFIG / "orchestration_policy.json"
 TASK_TYPES = {"research", "code", "data", "test", "security", "release"}
 RISKS = {"low", "medium", "high"}
 FINAL_TASK_STATES = {"rejected", "done"}

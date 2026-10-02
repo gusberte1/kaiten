@@ -13,7 +13,7 @@ while [ $# -gt 0 ]; do case "$1" in
 [ -n "$LLAMADAS" ] && [ -n "$MOTIVO" ] || { echo "Faltan --llamadas y --motivo" >&2; exit 2; }
 [ -f "$ENC" ] || { echo "La key no está bloqueada ($ENC no existe). Primero: bash $HERE/scripts/gemini_api_bloquear.sh" >&2; exit 1; }
 
-python3 - "$HERE/gemini_precios.json" "$MODELO" "$TIPO" "$LLAMADAS" <<'PY'
+python3 - "$HERE/../flow/gemini_precios.json" "$MODELO" "$TIPO" "$LLAMADAS" <<'PY'
 import json, sys
 cfg = json.load(open(sys.argv[1])); m, tipo, n = sys.argv[2], sys.argv[3], int(sys.argv[4])
 if m not in cfg["modelos"]:

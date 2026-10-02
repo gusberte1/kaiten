@@ -33,12 +33,12 @@ from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-from paths import ROOT, RUNTIME
+from paths import CONFIG, ROOT, RUNTIME
 BUDGET_DIR = RUNTIME / "budget"
 BUDGET_HISTORY = BUDGET_DIR / "history.jsonl"
 BUDGET_META = BUDGET_DIR / "meta.json"
 QUOTA_FILE = RUNTIME / "quota.json"
-PRECIOS_FILE = HERE / "gemini_precios.json"
+PRECIOS_FILE = CONFIG / "gemini_precios.json"
 
 # Umbrales v1
 MAX_TOKENS_PER_TASK_DEFAULT = 60_000

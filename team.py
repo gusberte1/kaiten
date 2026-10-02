@@ -6,13 +6,14 @@ import random
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+from paths import CONFIG
 ROLE_FOR = {"code": "implementer", "data": "implementer", "test": "evaluator",
             "research": "researcher", "security": "evaluator", "release": "release_guard"}
 EXECUTOR_ROLES = {"implementer", "evaluator", "researcher", "release_guard"}
 
 
 class Team:
-    def __init__(self, path: Path = HERE / "team.json"):
+    def __init__(self, path: Path = CONFIG / "team.json"):
         self.cfg = json.loads(path.read_text(encoding="utf-8"))
         self.agents = self.cfg["agents"]
 

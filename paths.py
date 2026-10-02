@@ -5,3 +5,4 @@ from pathlib import Path
 ENGINE = Path(__file__).resolve().parent
 ROOT = Path(os.environ.get("KAITEN_PROJECT") or ENGINE.parent).resolve()
 RUNTIME = ROOT / ".runtime"
+CONFIG = ROOT / "flow"

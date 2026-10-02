@@ -47,7 +47,7 @@ import vikunja_adapter
 
 HERE = Path(__file__).resolve().parent
 ROOT = paths.ROOT
-CONFIG_FILE = HERE / "flow_config.json"
+CONFIG_FILE = paths.CONFIG / "flow_config.json"
 TAG = re.compile(r"<[^>]+>")
 
 
@@ -133,7 +133,7 @@ STATE_COLUMN = {"ready": "En cola", "executing": "Trabajando", "changes_requeste
 class Flow:
     def __init__(self, repo: Path = ROOT, runtime: Path | None = None, providers_file: Path = prov.DEFAULT_FILE,
                  policy_file: Path = orchestrator.POLICY_FILE, tracker=None, notify=None, main_branch: str | None = None,
-                 team_file: Path = teammod.HERE / "team.json", jev_transport=None, jev_key: str | None = None):
+                 team_file: Path = paths.CONFIG / "team.json", jev_transport=None, jev_key: str | None = None):
         self.repo = repo
         self.rt = runtime or repo / ".runtime"
         self.state_file = self.rt / "agent-orchestration.json"
@@ -235,8 +235,8 @@ class Flow:
         return f"\n🔗 {self.tracker.link(vid, comment_id)}" if (self.tracker and vid) else ""
 
     def hooks(self, event: str, payload: dict) -> tuple[str, str] | None:
-        """Límites enchufables: ejecutables en agents/hooks/<evento>.d/. rc 0 = ok, 2 = escalar, otro = bloquear."""
-        d = self.repo / self.cfg.get("hooks_dir", "agents/hooks") / f"{event}.d"
+        """Límites enchufables: ejecutables en flow/hooks/<evento>.d/. rc 0 = ok, 2 = escalar, otro = bloquear."""
+        d = self.repo / self.cfg.get("hooks_dir", "flow/hooks") / f"{event}.d"
         for h in sorted(d.glob("*")) if d.is_dir() else []:
             if not os.access(h, os.X_OK):
                 continue
@@ -1388,7 +1388,7 @@ class Flow:
     def do_retro(self) -> Path:
         """Retrospectiva: métricas por agente, patrones de correcciones y propuestas para la persona."""
         text = learn.retro(self.tasks(), self.team, self.jev, self.rt / "learning" / "labels.json")
-        out = HERE / "learning" / "retros" / f"{time.strftime('%Y-%m-%d')}.md"
+        out = paths.CONFIG / "learning" / "retros" / f"{time.strftime('%Y-%m-%d')}.md"
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text, encoding="utf-8")
         return out
