@@ -25,7 +25,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 HERE = Path(__file__).resolve().parent
-RUNTIME = HERE.parent / ".runtime"
+from paths import RUNTIME
 QUOTA_FILE = RUNTIME / "quota.json"
 HISTORY_FILE = RUNTIME / "quota-history.jsonl"
 CODEX_SESSIONS = Path.home() / ".codex" / "sessions"

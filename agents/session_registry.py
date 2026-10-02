@@ -22,8 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
-RUNTIME_DIR = REPO_ROOT / ".runtime"
+from paths import ROOT as REPO_ROOT, RUNTIME as RUNTIME_DIR
 ACTIVE_SESSIONS_FILE = RUNTIME_DIR / "active_sessions.json"
 MAX_ACTIVE_AGE_HOURS = 8
 

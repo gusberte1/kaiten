@@ -17,7 +17,8 @@ from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_STATE = HERE.parent / ".runtime" / "agent-orchestration.json"
+from paths import RUNTIME
+DEFAULT_STATE = RUNTIME / "agent-orchestration.json"
 DEFAULT_TOKEN_FILE = Path.home() / ".config" / "sushi-inspector" / "vikunja-poc.env"
 BASE_URL = "http://100.75.61.75:3457/api/v2"
 REPO_URL = "https://github.com/gusberte1/Sushi-Inspector-v2"

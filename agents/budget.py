@@ -33,8 +33,7 @@ from pathlib import Path
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
-RUNTIME = ROOT / ".runtime"
+from paths import ROOT, RUNTIME
 BUDGET_DIR = RUNTIME / "budget"
 BUDGET_HISTORY = BUDGET_DIR / "history.jsonl"
 BUDGET_META = BUDGET_DIR / "meta.json"

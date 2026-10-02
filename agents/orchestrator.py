@@ -24,7 +24,8 @@ from tempfile import NamedTemporaryFile
 from typing import Any
 
 HERE = Path(__file__).resolve().parent
-DEFAULT_STATE = HERE.parent / ".runtime" / "agent-orchestration.json"
+from paths import RUNTIME
+DEFAULT_STATE = RUNTIME / "agent-orchestration.json"
 ROLES_FILE = HERE / "orchestration_roles.json"
 POLICY_FILE = HERE / "orchestration_policy.json"
 TASK_TYPES = {"research", "code", "data", "test", "security", "release"}

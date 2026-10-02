@@ -19,7 +19,7 @@ from pathlib import Path
 
 import orchestrator
 
-ROOT = Path(__file__).resolve().parent.parent
+from paths import ROOT
 STATE = ROOT / ".runtime/agent-orchestration.json"
 RUNS = ROOT / ".runtime/agent-runs"
 

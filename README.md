@@ -10,6 +10,6 @@ Motor de flujo agéntico: ticket → un agente implementa en un worktree → rev
 
 ## Estado
 
-Extracción inicial (snapshot, sin historial) desde sushi-inspector. Todavía asume que el motor vive en `<proyecto>/agents/` (`ROOT = parent`). Pendiente: resolver la raíz del proyecto por variable de entorno / cwd y quitar rutas fijas (`scripts/notificar.py`, `.runtime`).
+Extracción inicial (snapshot, sin historial) desde sushi-inspector. La raíz del proyecto se resuelve con la variable `KAITEN_PROJECT` (por defecto, el padre de `agents/`). Pendiente: quitar rutas fijas restantes (`scripts/notificar.py` en budget.py, `queue.json`/`current_agent` junto al motor).
 
 Ver `agents/FLOW.md`, y `flow-project.example.json` / `agents/flow_config.example.json` como plantillas.

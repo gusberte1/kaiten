@@ -38,6 +38,7 @@ import budget
 import jev as jevmod
 import learn
 import orchestrator
+import paths
 import providers as prov
 import session_registry
 import team as teammod
@@ -45,7 +46,7 @@ import tracker as trackermod
 import vikunja_adapter
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parent
+ROOT = paths.ROOT
 CONFIG_FILE = HERE / "flow_config.json"
 TAG = re.compile(r"<[^>]+>")
 
