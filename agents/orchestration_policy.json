@@ -1,0 +1,104 @@
+{
+  "version": 2,
+  "risk_policy": {
+    "low": {
+      "human_review": false,
+      "independent_reviews": 1,
+      "required_evidence": [
+        "summary",
+        "tests"
+      ]
+    },
+    "medium": {
+      "human_review": false,
+      "independent_reviews": 1,
+      "required_evidence": [
+        "summary",
+        "tests"
+      ]
+    },
+    "high": {
+      "human_review": true,
+      "independent_reviews": 2,
+      "required_evidence": [
+        "summary",
+        "tests",
+        "rollback"
+      ]
+    }
+  },
+  "task_type_evidence": {
+    "research": [
+      "report"
+    ],
+    "code": [
+      "commit",
+      "tests"
+    ],
+    "data": [
+      "commit",
+      "tests"
+    ],
+    "test": [
+      "tests"
+    ],
+    "security": [
+      "report",
+      "tests"
+    ],
+    "release": [
+      "commit",
+      "tests",
+      "rollback"
+    ]
+  },
+  "protected_actions": [
+    "deploy",
+    "hardware",
+    "systemd",
+    "cron",
+    "secret",
+    "destructive"
+  ],
+  "flow": {
+    "auto_intake": false,
+    "cross_provider_review": true,
+    "max_review_rounds": 3,
+    "max_run_failures": 3,
+    "run_timeout_s": 1800,
+    "test_timeout_s": 900,
+    "daily_run_limit": 15,
+    "quota_cooldown_h": 5,
+    "auto_merge_risks": [
+      "low",
+      "medium"
+    ],
+    "audit_sample_rate": 0.2,
+    "audit_first_n_per_provider": 3,
+    "provider_order_implement": [
+      "claude",
+      "codex",
+      "antigravity",
+      "deepseek"
+    ],
+    "provider_order_review": [
+      "codex",
+      "antigravity",
+      "claude",
+      "deepseek"
+    ],
+    "secret_patterns": [
+      "-----BEGIN [A-Z ]*PRIVATE KEY-----",
+      "\\btk_[A-Za-z0-9]{16,}",
+      "\\bsk-[A-Za-z0-9_-]{20,}",
+      "\\bAIza[0-9A-Za-z_-]{30,}",
+      "\\bghp_[A-Za-z0-9]{30,}",
+      "\\b[0-9]{8,10}:[A-Za-z0-9_-]{30,}"
+    ],
+    "max_diff_files": 40,
+    "max_diff_lines": 1500,
+    "jev_daily_cap": 400,
+    "explore": 0.05,
+    "retro_every_tasks": 5
+  }
+}

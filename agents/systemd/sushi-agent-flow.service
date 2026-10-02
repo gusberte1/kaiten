@@ -1,0 +1,16 @@
+[Unit]
+Description=Sushi Inspector - flujo autonomo de agentes (dispatcher, Vikunja -> agentes -> merge)
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/admin/Documents/sushi-inspector/agents
+ExecStart=/usr/bin/python3 -u flow.py daemon --every 60
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

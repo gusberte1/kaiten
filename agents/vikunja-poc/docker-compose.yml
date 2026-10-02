@@ -1,0 +1,16 @@
+services:
+  vikunja:
+    image: vikunja/vikunja:2.6.0
+    container_name: sushi-inspector-vikunja-poc
+    user: "1000:1000"
+    env_file: ${VIKUNJA_ENV_FILE:-.env}
+    environment:
+      VIKUNJA_DATABASE_TYPE: sqlite
+      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+      VIKUNJA_CORS_ENABLE: "false"
+    ports:
+      - "${VIKUNJA_BIND_IP}:3457:3456"
+    volumes:
+      - ./db:/db
+      - ./files:/app/vikunja/files
+    restart: unless-stopped

@@ -1,0 +1,87 @@
+{
+  "name": "sushi-inspector",
+  "git_email": "agents@sushi.local",
+  "branches": {
+    "main": "main",
+    "integration": "dev"
+  },
+  "hooks_dir": "agents/hooks",
+  "guards": {
+    "protected_paths": [
+      "agents/orchestration_*.json",
+      "agents/orchestrator.py",
+      "agents/flow.py",
+      "agents/providers.json",
+      "system-setup/*.sh",
+      "system-setup/deepseek-harness/**",
+      "scripts/loop.sh",
+      "scripts/cron/**",
+      "**/*.service",
+      "**/*.timer",
+      ".env",
+      "**/.env",
+      "**/*.env",
+      "**/secrets*",
+      ".github/**",
+      "AGENTS.md",
+      "agents/team.json",
+      "agents/jev.py",
+      "agents/learn.py",
+      "agents/team.py",
+      "agents/providers.py"
+    ],
+    "test_cmd_allow_prefixes": [
+      "python3 -m unittest",
+      "python3 -m pytest",
+      "python3 ",
+      "bash -n ",
+      "shellcheck "
+    ],
+    "always_allowed_paths": [
+      "**/docs/sessions/**"
+    ]
+  },
+  "component_hint": "(tickets/[\\w.\\-]+|raspberry-pi-client-setup/[\\w.\\-]+|raspberry-pi-client-setup|system-setup|scripts|agents)",
+  "component_map": [
+    [
+      "\\b(clips?|sitio|firebase|8094|registro_eventos|evento_monitor)\\b",
+      "tickets/2026.09.20_registro_eventos"
+    ],
+    [
+      "\\b(caja_tapada|tapada|cierre_no_detectado|cierre_real|cierre_perdido|cierres|v11|v16)\\b",
+      "tickets/2026.09.03_evento_caja_tapada"
+    ],
+    [
+      "\\b(obb|orientada|rotada|angulo|bust)\\b",
+      "tickets/2026.08.25_obb_bust_v2"
+    ],
+    [
+      "\\b(lleno|piezas|mobilesam|segmentacion|poses)\\b",
+      "tickets/2026.09.03_lleno_fase2"
+    ],
+    [
+      "\\b(captura|c922|8080|camara|streaming)\\b",
+      "tickets/2026.08.28_webapp_capturas"
+    ],
+    [
+      "\\b(preetiquetado|revision|8090|anotacion|etiquetas?)\\b",
+      "tickets/2026.08.28_preetiquetado_y_revision"
+    ],
+    [
+      "\\b(box_detector|detector|5050)\\b",
+      "tickets/2026.08.26_box_detector_v0.1"
+    ],
+    [
+      "\\b(dispatcher|orquestador|vikunja|jev|flujo|subagent|orchestrat)\\b",
+      "agents"
+    ],
+    [
+      "\\b(systemd|tailscale|status|8099|telemetria|sysstat)\\b",
+      "system-setup"
+    ]
+  ],
+  "notify_cmd": [
+    "python3",
+    "scripts/notificar.py"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "tracker": {
+    "kind": "vikunja",
+    "enabled": true,
+    "base_url": "http://localhost:3456/api/v2",
+    "token_file": "~/.config/kaiten/vikunja.env",
+    "project_id": 2,
+    "bot_usernames": [
+      "bot-orchestrator",
+      "bot-codex"
+    ],
+    "human_usernames": [
+      "Gustavo"
+    ],
+    "kanban_view_id": 12
+  }
+}

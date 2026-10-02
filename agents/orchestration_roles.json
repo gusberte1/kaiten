@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "roles": {
+    "orchestrator": {
+      "purpose": "Descompone, prioriza y coordina; no se autoaprueba ni despliega.",
+      "allowed_task_types": [
+        "research",
+        "code",
+        "data",
+        "test",
+        "security",
+        "release"
+      ],
+      "may_approve": false
+    },
+    "implementer": {
+      "purpose": "Implementa cambios reversibles en un worktree asignado.",
+      "allowed_task_types": [
+        "code",
+        "data"
+      ],
+      "may_approve": false
+    },
+    "evaluator": {
+      "purpose": "Ejecuta tests, evals y revisa evidencia de otra ejecución.",
+      "allowed_task_types": [
+        "test",
+        "data",
+        "security"
+      ],
+      "may_approve": false
+    },
+    "researcher": {
+      "purpose": "Investiga y entrega un reporte o ADR; no cambia producción.",
+      "allowed_task_types": [
+        "research"
+      ],
+      "may_approve": false
+    },
+    "release_guard": {
+      "purpose": "Prepara evidencia de release y rollback; no ejecuta el cambio de producción.",
+      "allowed_task_types": [
+        "release",
+        "security"
+      ],
+      "may_approve": false
+    },
+    "reviewer": {
+      "purpose": "Revisa de forma independiente el trabajo de OTRO proveedor: lee el diff y la evidencia, no modifica nada y emite veredicto approve/changes/escalate.",
+      "allowed_task_types": [
+        "research",
+        "code",
+        "data",
+        "test",
+        "security",
+        "release"
+      ],
+      "may_approve": false,
+      "reviews": true
+    }
+  }
+}

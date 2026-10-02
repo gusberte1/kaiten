@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "_doc": "Un proveedor = una entrada. `implement`/`review` son los argv (con {prompt}, {prompt_file}, {cwd}). Autonomía plena para implementar; el revisor va en modo solo lectura y el controlador verifica igual que no haya tocado nada. Los límites viven en la política (orchestration_policy.json), en las guardas post-ejecución de flow.py y por tarea (contrato), no en el sandbox del proveedor. Para sumar otro (aider, OpenCode, un script propio) basta copiar una entrada y poner enabled=true.",
+  "providers": {
+    "claude": {
+      "enabled": true,
+      "binary": "claude",
+      "strip_env": [
+        "ANTHROPIC_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN"
+      ],
+      "implement": [
+        "-p",
+        "{prompt}",
+        "--permission-mode",
+        "acceptEdits",
+        "--add-dir",
+        "{cwd}"
+      ],
+      "review": [
+        "-p",
+        "{prompt}",
+        "--permission-mode",
+        "plan",
+        "--add-dir",
+        "{cwd}"
+      ],
+      "quota": ["claude"],
+      "trailer": "Claude <noreply@anthropic.com>"
+    },
+    "codex": {
+      "enabled": true,
+      "binary": "codex",
+      "implement": [
+        "exec",
+        "-C",
+        "{cwd}",
+        "-s",
+        "workspace-write",
+        "{prompt}"
+      ],
+      "review": [
+        "exec",
+        "-C",
+        "{cwd}",
+        "-s",
+        "read-only",
+        "{prompt}"
+      ],
+      "quota": ["codex"],
+      "trailer": "Codex <noreply@openai.com>"
+    },
+    "gemini": {
+      "enabled": false,
+      "binary": "gemini",
+      "implement": [
+        "-p",
+        "{prompt}",
+        "--approval-mode",
+        "yolo",
+        "--skip-trust"
+      ],
+      "review": [
+        "-p",
+        "{prompt}",
+        "--approval-mode",
+        "plan",
+        "--skip-trust"
+      ],
+      "trailer": "Gemini <noreply@google.com>",
+      "strip_env": [
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENAI_USE_VERTEXAI",
+        "GOOGLE_CLOUD_PROJECT"
+      ],
+      "_nota": "Gemini SIEMPRE con cuenta Google (cuota del plan mensual), nunca con API key (se paga por token): GOOGLE_GENAI_USE_GCA=true fuerza el login con cuenta, se le quitan las keys del entorno y se exige sesión iniciada (google_accounts.json.active). Login: bash agents/scripts/gemini_login_cuenta.sh",
+      "auth_checks": [
+        {
+          "file": "~/.gemini/google_accounts.json",
+          "path": "active",
+          "fix": "Gemini sin sesión de cuenta: corré bash agents/scripts/gemini_login_cuenta.sh"
+        }
+      ],
+      "env": {
+        "GOOGLE_GENAI_USE_GCA": "true"
+      }
+    },
+    "antigravity": {
+      "enabled": true,
+      "binary": "agy",
+      "_nota": "Proveedor secundario experimental vía la CLI oficial agy. `-p` ejecuta un prompt y termina; --output-format json conserva el resultado estructurado en stdout y `separate_stderr` guarda diagnósticos aparte. Nunca hereda API keys: requiere la sesión de cuenta Google ya autenticada en agy. Habilitado por decisión de Gustavo (2026-09-26, alcance de VIK-4); sin sesión de cuenta Google el auth_check lo deja fuera de la rotación. `--mode=plan` no garantiza solo lectura; flow.py comprueba que el revisor no haya modificado archivos.",
+      "implement": ["-p", "{prompt}", "--output-format", "json", "--mode=accept-edits", "--dangerously-skip-permissions"],
+      "review": ["-p", "{prompt}", "--output-format", "json", "--mode=plan"],
+      "separate_stderr": true,
+      "strip_env": [
+        "GEMINI_API_KEY",
+        "GOOGLE_API_KEY",
+        "GOOGLE_GENAI_USE_VERTEXAI",
+        "GOOGLE_CLOUD_PROJECT"
+      ],
+      "auth_checks": [
+        {
+          "command": ["{binary}", "-p", "/usage", "--output-format", "json"],
+          "path": "status",
+          "equals": "SUCCESS",
+          "timeout_s": 15,
+          "cache_s": 300,
+          "fix": "Antigravity sin sesión de cuenta verificable: iniciá sesión interactivamente con agy y volvé a ejecutar el smoke."
+        },
+        {
+          "file": "~/.gemini/antigravity-cli/settings.json",
+          "path": "modelProvider",
+          "not_equals": "gemini",
+          "allow_missing": true,
+          "fix": "Antigravity está configurado con modelProvider=gemini (API key). Quitá modelProvider para usar sólo la sesión de cuenta Google."
+        }
+      ],
+      "quota": ["agy:Gemini Models"],
+      "trailer": "Antigravity <noreply@google.com>"
+    },
+    "deepseek": {
+      "enabled": true,
+      "binary": "dsh",
+      "_nota": "DeepSeek Harness (dsh, open source) en modo headless: una tarea, imprime el resultado y sale. La key sale de ~/.config/deepseek/api_key solo hacia este proceso. dsh no tiene modo solo-lectura: el controlador igual verifica que el revisor no haya tocado nada.",
+      "env_from_file": {
+        "DEEPSEEK_API_KEY": "~/.config/deepseek/api_key"
+      },
+      "implement": [
+        "--profile",
+        "headless",
+        "{prompt}"
+      ],
+      "review": [
+        "--profile",
+        "headless",
+        "{prompt}"
+      ],
+      "trailer": "DeepSeek <noreply@deepseek.com>"
+    }
+  },
+  "blocked_regex": "usage limit|rate limit|credit balance|quota|plan limit|resets? at|reached your|resource exhausted|out of credits|exceeded your current quota|status: 401|unauthenticated|invalid api key|api key not valid|session limit|hit your .{0,20}limit|limit reached|resets \\\\d"
+}
