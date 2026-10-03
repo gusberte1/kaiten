@@ -170,12 +170,12 @@ class Providers:
             except (OSError, ValueError, AttributeError, subprocess.TimeoutExpired):
                 result = False, fix
                 if cache_s:
-                    self._auth_cache[cache_key] = (time.monotonic() + cache_s, result)
+                    self._auth_cache[cache_key] = (time.monotonic() + (cache_s if result[0] else min(cache_s, 20)), result)
                 return result
             ok = value == chk["equals"] if "equals" in chk else bool(value)
             result = ok, "ok" if ok else fix
             if cache_s:
-                self._auth_cache[cache_key] = (time.monotonic() + cache_s, result)
+                self._auth_cache[cache_key] = (time.monotonic() + (cache_s if result[0] else min(cache_s, 20)), result)
             return result
 
         f = Path(chk["file"]).expanduser()
@@ -193,14 +193,14 @@ class Providers:
             ok = value != chk["not_equals"] if value is not None else bool(chk.get("allow_missing"))
             result = ok, "ok" if ok else fix
             if cache_s:
-                self._auth_cache[cache_key] = (time.monotonic() + cache_s, result)
+                self._auth_cache[cache_key] = (time.monotonic() + (cache_s if result[0] else min(cache_s, 20)), result)
             return result
         if not value or ("equals" in chk and value != chk["equals"]):
             result = False, fix
         else:
             result = True, "ok"
         if cache_s:
-            self._auth_cache[cache_key] = (time.monotonic() + cache_s, result)
+            self._auth_cache[cache_key] = (time.monotonic() + (cache_s if result[0] else min(cache_s, 20)), result)
         return result
 
     def usable(self, name: str, mode: str) -> tuple[bool, str]:

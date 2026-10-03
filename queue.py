@@ -20,8 +20,10 @@ from tempfile import NamedTemporaryFile
 from typing import Any
 
 
+from paths import CONFIG
+
 ROOT = Path(__file__).resolve().parent
-DEFAULT_QUEUE = ROOT / "queue.json"
+DEFAULT_QUEUE = CONFIG / "queue.json"
 DEFAULT_AGENT_FILE = ROOT / "current_agent"
 VALID_STATES = {"pending", "claimed", "blocked", "done"}
 VALID_AGENTS = {"claude", "codex", "antigravity", "deepseek"}
@@ -225,7 +227,7 @@ def command_current_agent(args: argparse.Namespace) -> None:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE,
-                        help="cola JSON (por defecto agents/queue.json)")
+                        help="cola JSON (por defecto flow/queue.json)")
     parser.add_argument("--agent-file", type=Path, default=DEFAULT_AGENT_FILE,
                         help="archivo de agente activo (por defecto agents/current_agent)")
     sub = parser.add_subparsers(dest="command", required=True)

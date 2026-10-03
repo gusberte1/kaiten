@@ -13,8 +13,8 @@ fi
 
 mkdir -p "$DST"
 NODE_BIN="$(ls -d "$HOME"/.nvm/versions/node/*/bin 2>/dev/null | sort -V | tail -1 || true)"
-sed "s|^\[Service\]|[Service]\nEnvironment=PATH=${NODE_BIN}:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin|" "$REPO/agents/systemd/sushi-quota.service" > "$DST/sushi-quota.service"
-cp "$REPO/agents/systemd/sushi-quota.timer" "$DST/sushi-quota.timer"
+sed "s|^\[Service\]|[Service]\nEnvironment=PATH=${NODE_BIN}:$HOME/.local/bin:/usr/local/bin:/usr/bin:/bin|" "$REPO/flow/systemd/sushi-quota.service" > "$DST/sushi-quota.service"
+cp "$REPO/flow/systemd/sushi-quota.timer" "$DST/sushi-quota.timer"
 systemctl --user daemon-reload
 systemctl --user enable --now sushi-quota.timer
 systemctl --user start sushi-quota.service || true

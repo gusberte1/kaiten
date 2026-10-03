@@ -3,7 +3,7 @@
 # al monitor de servicios :8099. Idempotente. --sin-arrancar sólo instala; --desinstalar lo saca.
 set -euo pipefail
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
-UNIT_SRC="$REPO/agents/systemd/sushi-agent-flow.service"
+UNIT_SRC="$REPO/flow/systemd/sushi-agent-flow.service"
 UNIT_DST="$HOME/.config/systemd/user/sushi-agent-flow.service"
 STATUS="$REPO/system-setup/status-page/status.py"
 
