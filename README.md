@@ -19,6 +19,6 @@ El motor se incluye en `<proyecto>/agents/` (recomendado: `git subtree add --pre
 
 ## Estado
 
-Extraído de sushi-inspector. Pendiente: `queue.json` y `current_agent` aún se guardan junto al motor, y `budget.py` invoca `scripts/notificar.py` directo.
+Extraído de sushi-inspector. Pendiente: `budget.py` invoca `scripts/notificar.py` directo (falta usar `notify_cmd` de `flow-project.json`).
 
 Ver `FLOW.md`.

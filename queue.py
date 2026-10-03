@@ -22,9 +22,8 @@ from typing import Any
 
 from paths import CONFIG
 
-ROOT = Path(__file__).resolve().parent
 DEFAULT_QUEUE = CONFIG / "queue.json"
-DEFAULT_AGENT_FILE = ROOT / "current_agent"
+DEFAULT_AGENT_FILE = CONFIG / "current_agent"
 VALID_STATES = {"pending", "claimed", "blocked", "done"}
 VALID_AGENTS = {"claude", "codex", "antigravity", "deepseek"}
 
@@ -229,7 +228,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE,
                         help="cola JSON (por defecto flow/queue.json)")
     parser.add_argument("--agent-file", type=Path, default=DEFAULT_AGENT_FILE,
-                        help="archivo de agente activo (por defecto agents/current_agent)")
+                        help="archivo de agente activo (por defecto flow/current_agent)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     set_ag = sub.add_parser("set-agent", help="definir qué agente tomará el próximo turno")
