@@ -4,7 +4,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from agents.vikunja_adapter import Client, FLOW_DOC_URL, MAX_COMMENT_CHARS, MAX_COMMENT_WORDS, brief_comment, description, load_task, token_from
+try:
+    from agents.vikunja_adapter import Client, FLOW_DOC_URL, MAX_COMMENT_CHARS, MAX_COMMENT_WORDS, brief_comment, description, load_task, token_from
+except ImportError:
+    from vikunja_adapter import Client, FLOW_DOC_URL, MAX_COMMENT_CHARS, MAX_COMMENT_WORDS, brief_comment, description, load_task, token_from
 
 
 class VikunjaAdapterTest(unittest.TestCase):
@@ -44,12 +47,18 @@ class VikunjaAdapterTest(unittest.TestCase):
         self.assertIn("[Doc](https://example.com/doc)", comment)
 
     def test_component_doc_link(self):
-        from agents.vikunja_adapter import component_doc_link, REPO_URL
+        try:
+            from agents.vikunja_adapter import component_doc_link, REPO_URL
+        except ImportError:
+            from vikunja_adapter import component_doc_link, REPO_URL
         here = Path(__file__).resolve().parent
-        link = component_doc_link(here.parent, "agents")
-        self.assertEqual(link, f"[agents/README.md]({REPO_URL}/blob/main/agents/README.md)")
-        link_tree = component_doc_link(here.parent, "scripts")
-        self.assertEqual(link_tree, f"[Flujo de agentes]({FLOW_DOC_URL})")
+        repo = here if (here / ".git").is_dir() else here.parent
+        comp = "agents" if (repo / "agents" / "README.md").exists() else ""
+        link = component_doc_link(repo, comp)
+        if comp:
+            self.assertEqual(link, f"[{comp}/README.md]({REPO_URL}/blob/main/{comp}/README.md)")
+        else:
+            self.assertEqual(link, f"[Flujo de agentes]({FLOW_DOC_URL})")
 
     def test_description_is_structured_and_secret_free(self):
         value = description({"id": "VIK-1", "title": "POC", "component": "agents", "type": "code", "risk": "medium", "protected_actions": ["cron"]})

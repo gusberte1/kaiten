@@ -1,0 +1,12 @@
+[Unit]
+Description=Kaiten Engine Safe Auto-Updater
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/.local/share/kaiten
+ExecStart=%h/.local/share/kaiten/scripts/kaiten-autoupdate.sh
+TimeoutStartSec=180
+StandardOutput=journal
+StandardError=journal
